@@ -1,0 +1,59 @@
+import apiClient from '../client'
+import { ENDPOINTS } from '../config'
+
+/**
+ * Utilities Service (Printing)
+ */
+export const utilitiesService = {
+  /**
+   * Get all utilities posted by admin
+   */
+  async getAll() {
+    try {
+      const response = await apiClient.get(ENDPOINTS.utilities.getAll)
+      return response
+    } catch (error) {
+      console.error('Failed to fetch utilities:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Get pricing information
+   */
+  async getPricing() {
+    try {
+      const response = await apiClient.get(ENDPOINTS.utilities.getPricing)
+      return response
+    } catch (error) {
+      console.error('Failed to fetch pricing:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Create new print job
+   */
+  async createPrintJob(printData) {
+    try {
+      const response = await apiClient.post(ENDPOINTS.utilities.createPrintJob, printData)
+      return response
+    } catch (error) {
+      console.error('Failed to create print job:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Get user's print jobs
+   */
+  async getJobs() {
+    try {
+      const response = await apiClient.get(ENDPOINTS.utilities.getJobs)
+      return response
+    } catch (error) {
+      console.error('Failed to fetch jobs:', error)
+      throw error
+    }
+  },
+}
