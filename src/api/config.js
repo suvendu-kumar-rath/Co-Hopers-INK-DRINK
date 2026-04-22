@@ -17,6 +17,7 @@ export const ENDPOINTS = {
   },
   // Coffee/Refreshment endpoints
   refreshment: {
+    getItems: 'cafeteria/items',
     getMenu: '/refreshment/menu',
     createOrder: '/refreshment/order',
     getOrders: '/refreshment/orders',

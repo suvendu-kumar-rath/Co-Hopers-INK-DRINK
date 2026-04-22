@@ -6,6 +6,19 @@ import { ENDPOINTS } from '../config'
  */
 export const refreshmentService = {
   /**
+   * Get cafeteria items from cafeteria/items endpoint
+   */
+  async getItems() {
+    try {
+      const response = await apiClient.get(ENDPOINTS.refreshment.getItems)
+      return response
+    } catch (error) {
+      console.error('Failed to fetch cafeteria items:', error)
+      throw error
+    }
+  },
+
+  /**
    * Get menu items
    */
   async getMenu() {
