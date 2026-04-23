@@ -18,8 +18,9 @@ export const ENDPOINTS = {
   // Coffee/Refreshment endpoints
   refreshment: {
     getItems: 'cafeteria/items',
-    getMenu: '/refreshment/menu',
-    createOrder: '/refreshment/order',
+    getItemById: (id) => `cafeteria/items/${id}`,
+    getMenu: 'cafeteria/menu',
+    createOrder: 'cafeteria/order',
     getOrders: '/refreshment/orders',
   },
   // Printing/Utilities endpoints

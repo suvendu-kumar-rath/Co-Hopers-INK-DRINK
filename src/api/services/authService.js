@@ -12,11 +12,12 @@ export const authService = {
     try {
       const response = await apiClient.post(ENDPOINTS.auth.login, credentials)
       
-      // Store token if login successful
-      if (response.token) {
-        localStorage.setItem('authToken', response.token)
-      }
-      
+      // Store token and user from response (supports both flat and nested shapes)
+      const token = response.token ?? response.data?.token
+      const user = response.user ?? response.data?.user
+      if (token) localStorage.setItem('authToken', token)
+      if (user) localStorage.setItem('user', JSON.stringify(user))
+
       return response
     } catch (error) {
       console.error('Login failed:', error)

@@ -77,14 +77,19 @@ import { refreshmentService } from '@/api'
 // Get menu
 const menu = await refreshmentService.getMenu()
 
-// Create order
-const order = await refreshmentService.createOrder({
-  items: [
-    { id: 1, quantity: 2 },
-    { id: 3, quantity: 1 }
-  ],
-  notes: 'Extra sugar'
-})
+// Create order (multipart/form-data — supports paymentScreenshot file upload)
+const formData = new FormData()
+formData.append('orders', JSON.stringify([
+  { orderType: 'Coffee', itemName: 'Cappuccino', quantity: 2 },
+  { orderType: 'Tea',    itemName: 'Green Tea',  quantity: 1 },
+]))
+formData.append('specialInstructions', 'Extra hot please')
+formData.append('utrNumber', 'UTR1234567890')
+formData.append('isPersonal', 'true')
+formData.append('isMonthlyPayment', 'false')
+formData.append('paymentScreenshot', screenshotFile) // File object (optional)
+
+const order = await refreshmentService.createOrder(formData)
 
 // Get orders
 const orders = await refreshmentService.getOrders()
