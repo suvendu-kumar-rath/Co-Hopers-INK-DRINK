@@ -12,8 +12,14 @@ export const authService = {
     try {
       const response = await apiClient.post(ENDPOINTS.auth.login, credentials)
       
-      // Store token and user from response (supports both flat and nested shapes)
-      const token = response.token ?? response.data?.token
+      // Store token and user from response (supports various response shapes)
+      const token =
+        response.token ??
+        response.accessToken ??
+        response.jwtToken ??
+        response.data?.token ??
+        response.data?.accessToken ??
+        response.data?.jwtToken
       const user = response.user ?? response.data?.user
       if (token) localStorage.setItem('authToken', token)
       if (user) localStorage.setItem('user', JSON.stringify(user))

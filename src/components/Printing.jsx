@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Printing.css';
+import { utilitiesService } from '../api/services/utilitiesService';
 
 const Printing = () => {
   const [printJob, setPrintJob] = useState({
@@ -15,6 +16,17 @@ const Printing = () => {
 
   const [printQueue, setPrintQueue] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [utilityId, setUtilityId] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    utilitiesService.getAll()
+      .then((data) => {
+        const items = Array.isArray(data) ? data : data?.utilities || data?.data || [];
+        if (items.length > 0) setUtilityId(items[0].id);
+      })
+      .catch((err) => console.error('Failed to load utilities:', err));
+  }, []);
 
   const paperSizes = {
     a4: { name: 'A4', price: 2 },
@@ -55,7 +67,7 @@ const Printing = () => {
     return (basePrice + paperPrice) * copies;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!printJob.userName || !printJob.fileName) {
@@ -63,32 +75,61 @@ const Printing = () => {
       return;
     }
 
-    const newPrintJob = {
-      ...printJob,
-      id: Date.now(),
-      status: 'queued',
-      price: calculatePrice(),
-      submittedAt: new Date().toLocaleString(),
-      fileSize: selectedFile ? (selectedFile.size / 1024).toFixed(2) + ' KB' : 'N/A'
-    };
+    const colorModeMap = { blackwhite: 'Black & White', color: 'Color' };
+    const paperSizeMap = { a4: 'A4', a3: 'A3', letter: 'Letter', legal: 'Legal' };
+    const orientationMap = { portrait: 'Portrait', landscape: 'Landscape' };
 
-    setPrintQueue([...printQueue, newPrintJob]);
+    setSubmitting(true);
+    try {
+      const result = await utilitiesService.placeOrder({
+        orders: [
+          {
+            utilityId: utilityId,
+            quantity: parseInt(printJob.copies) || 1,
+            printType: 'Normal',
+            colorMode: colorModeMap[printJob.colorMode],
+            paperSize: paperSizeMap[printJob.paperSize],
+            orientation: orientationMap[printJob.orientation],
+            doubleSided: printJob.doubleSided,
+          },
+        ],
+        specialInstruction: '',
+        printFile: selectedFile,
+      });
 
-    // Reset form
-    setPrintJob({
-      fileName: '',
-      fileType: 'pdf',
-      colorMode: 'blackwhite',
-      paperSize: 'a4',
-      orientation: 'portrait',
-      copies: 1,
-      doubleSided: false,
-      userName: ''
-    });
-    setSelectedFile(null);
-    document.getElementById('fileInput').value = '';
+      const placedOrders = result?.orders || [];
+      const newPrintJob = {
+        ...printJob,
+        id: placedOrders[0]?.id || Date.now(),
+        status: placedOrders[0]?.status || 'Pending',
+        price: result?.totalAmount || calculatePrice(),
+        submittedAt: new Date().toLocaleString(),
+        fileSize: selectedFile ? (selectedFile.size / 1024).toFixed(2) + ' KB' : 'N/A',
+      };
 
-    alert('Print job submitted successfully! 🖨️');
+      setPrintQueue([...printQueue, newPrintJob]);
+
+      // Reset form
+      setPrintJob({
+        fileName: '',
+        fileType: 'pdf',
+        colorMode: 'blackwhite',
+        paperSize: 'a4',
+        orientation: 'portrait',
+        copies: 1,
+        doubleSided: false,
+        userName: '',
+      });
+      setSelectedFile(null);
+      document.getElementById('fileInput').value = '';
+
+      alert('Print job submitted successfully!');
+    } catch (error) {
+      console.error('Failed to submit print job:', error);
+      alert('Failed to submit print job. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const cancelPrintJob = (id) => {
@@ -211,8 +252,8 @@ const Printing = () => {
             <strong>Estimated Price:</strong> ₹{calculatePrice()}
           </div>
 
-          <button type="submit" className="submit-btn">
-            Submit Print Job 🖨️
+          <button type="submit" className="submit-btn" disabled={submitting}>
+            {submitting ? 'Submitting...' : 'Submit Print Job 🖨️'}
           </button>
         </form>
 

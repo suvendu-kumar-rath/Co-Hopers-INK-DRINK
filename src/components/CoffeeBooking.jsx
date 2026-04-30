@@ -411,8 +411,7 @@ const CoffeeBooking = () => {
                 className="relative rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl cursor-pointer hover:-translate-y-2"
               >
                 <div className={`bg-gradient-to-br ${gradient} pt-10 pb-7 px-8 flex flex-col items-center text-white`}>
-                  <span className="text-5xl mb-2 drop-shadow">{icon}</span>
-                  <h3 className="text-xl font-bold text-center leading-tight">{name}</h3>
+                  <h3 className="text-4xl font-bold text-center leading-tight">{item.category}</h3>
                 </div>
 
                 <div className="bg-white p-5 flex flex-col gap-3">
@@ -425,11 +424,11 @@ const CoffeeBooking = () => {
                     </div>
                   )}
 
-                  {item.category && (
+                  {/* {item.category && (
                     <div className="flex flex-wrap gap-2 mt-1">
                       <span className="text-xs bg-pink-50 text-pink-600 px-3 py-1 rounded-full font-medium border border-pink-100">{item.category}</span>
                     </div>
-                  )}
+                  )} */}
 
                   <div className="mt-2 text-xs text-pink-500 font-semibold flex items-center gap-1">Tap to order →</div>
                 </div>

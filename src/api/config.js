@@ -26,8 +26,10 @@ export const ENDPOINTS = {
   // Printing/Utilities endpoints
   utilities: {
     getAll: 'utilities',
+    getById: (id) => `utilities/${id}`,
     getPricing: '/utilities/pricing',
     createPrintJob: '/utilities/print',
     getJobs: '/utilities/jobs',
+    placeOrder: 'utilities/order/place',
   },
 }

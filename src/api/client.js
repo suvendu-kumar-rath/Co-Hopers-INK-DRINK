@@ -33,17 +33,24 @@ class ApiClient {
    */
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`
+    const mergedHeaders = {
+      ...this.headers,
+      ...options.headers,
+    }
+    // Remove headers explicitly set to undefined (e.g. to omit Content-Type for FormData)
+    const filteredHeaders = Object.fromEntries(
+      Object.entries(mergedHeaders).filter(([, v]) => v !== undefined)
+    )
     const config = {
       ...options,
-      headers: {
-        ...this.headers,
-        ...options.headers,
-      },
+      headers: filteredHeaders,
     }
 
     // Add authorization token if available
-    const token = localStorage.getItem('authToken')
-    if (token) {
+    const rawToken = localStorage.getItem('authToken')
+    if (rawToken) {
+      // Strip any existing 'Bearer ' prefix to avoid double-prefixing
+      const token = rawToken.replace(/^Bearer\s+/i, '')
       config.headers['Authorization'] = `Bearer ${token}`
     }
 
@@ -116,6 +123,21 @@ class ApiClient {
     return this.request(endpoint, {
       ...options,
       method: 'DELETE',
+    })
+  }
+
+  /**
+   * POST multipart/form-data request (browser sets Content-Type with boundary)
+   */
+  postFormData(endpoint, formData, options = {}) {
+    return this.request(endpoint, {
+      ...options,
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Content-Type': undefined, // let browser set multipart/form-data with boundary
+        ...options.headers,
+      },
     })
   }
 }

@@ -38,6 +38,10 @@ function App() {
   }
 
   const handleSelectOption = (option) => {
+    if (!isLoggedIn) {
+      setIsLoginModalOpen(true)
+      return
+    }
     setSelectedOption(option)
   }
 
@@ -102,6 +106,41 @@ function App() {
   }
 
   // Component view
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen">
+        <header className="header-section">
+          <div className="header-container">
+            <img src="/logo192.png" alt="CoHopers Logo" className="header-logo" />
+            <button className="header-login-btn" onClick={() => setIsLoginModalOpen(true)}>Login</button>
+          </div>
+        </header>
+
+        <div className="p-8 max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-800">Login Required</h1>
+            <p className="text-gray-600 mt-2">Please log in to access Refreshment and Utilities.</p>
+          </div>
+
+          <div className="flex justify-center">
+            <button
+              className="header-login-btn"
+              onClick={() => setIsLoginModalOpen(true)}
+            >
+              Login
+            </button>
+          </div>
+
+          <LoginModal
+            isOpen={isLoginModalOpen}
+            onClose={() => setIsLoginModalOpen(false)}
+            onLoginSuccess={handleLoginSuccess}
+          />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen">
       {/* Header Section */}

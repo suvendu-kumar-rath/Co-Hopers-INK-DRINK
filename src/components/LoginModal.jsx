@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { authService } from '../api'
 
 function LoginModal({ isOpen, onClose, onLoginSuccess }) {
@@ -20,6 +20,25 @@ function LoginModal({ isOpen, onClose, onLoginSuccess }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
+
+  // Clear form when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setPhone('')
+      setPassword('')
+      setUserName('')
+      setEmail('')
+      setMobile('')
+      setIdProof(null)
+      setConfirmPassword('')
+      setCabinNumber('')
+      setRoomNumber('')
+      setError(null)
+      setSuccess(null)
+      setIsLogin(true)
+      setShowPassword(false)
+    }
+  }, [isOpen])
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -158,6 +177,7 @@ function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                 placeholder="Enter your phone number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
+                autoComplete="tel"
                 className="p-4 border-2 border-gray-200 rounded-xl text-base transition-all duration-300 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
                 required
               />
@@ -172,6 +192,7 @@ function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="new-password"
                   className="flex-1 p-4 pr-12 border-2 border-gray-200 rounded-xl text-base transition-all duration-300 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
                   required
                 />
@@ -257,6 +278,7 @@ function LoginModal({ isOpen, onClose, onLoginSuccess }) {
                   placeholder="Create a password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="new-password"
                   className="flex-1 p-3 pr-12 border-2 border-gray-200 rounded-xl text-base transition-all duration-300 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
                   required
                 />
