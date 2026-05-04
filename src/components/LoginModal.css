@@ -10,6 +10,7 @@
   align-items: center;
   z-index: 1000;
   animation: fadeIn 0.3s ease-in-out;
+  padding-top: 100px;
 }
 
 @keyframes fadeIn {
@@ -25,7 +26,7 @@
   background: white;
   border-radius: 20px;
   padding: 2.5rem;
-  max-width: 450px;
+  max-width: 700px;
   width: 90%;
   position: relative;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
