@@ -154,7 +154,7 @@ function OrderModal({ item, gradient, onClose }) {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto"
+        className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[92vh] overflow-hidden flex flex-col"
         onClick={e => e.stopPropagation()}
       >
         {/* Modal header */}
@@ -175,7 +175,7 @@ function OrderModal({ item, gradient, onClose }) {
         </div>
 
         {submitted ? (
-          <div className="flex flex-col items-center justify-center py-16 gap-4 px-8 text-center">
+          <div className="flex flex-col items-center justify-center py-16 gap-4 px-8 text-center flex-1">
             <div className="text-7xl">✅</div>
             <h3 className="text-2xl font-bold text-gray-800">Order Placed!</h3>
             <p className="text-gray-500 text-sm">Your print request for <span className="font-semibold text-gray-700">{name}</span> has been submitted.</p>
@@ -191,7 +191,7 @@ function OrderModal({ item, gradient, onClose }) {
             </button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-5">
+          <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-5 overflow-y-auto flex-1">
 
             {apiError && (
               <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3">

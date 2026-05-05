@@ -15,6 +15,10 @@ export const ENDPOINTS = {
     logout: '/auth/logout',
     register: 'user/visitor/register',
   },
+  // Order/History endpoints
+  orders: {
+    getHistory: 'user/order-history',
+  },
   // Coffee/Refreshment endpoints
   refreshment: {
     getItems: 'cafeteria/items',
