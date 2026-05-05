@@ -48,7 +48,22 @@ function App() {
     setOrderError(null)
     try {
       const response = await orderService.getOrderHistory()
-      setOrderHistory(response.data || response || [])
+      console.log('Order History Response:', response)
+      
+      // Handle various response structures
+      let orders = []
+      if (Array.isArray(response)) {
+        orders = response
+      } else if (response?.data && Array.isArray(response.data)) {
+        orders = response.data
+      } else if (response?.orders && Array.isArray(response.orders)) {
+        orders = response.orders
+      } else if (response?.data?.orders && Array.isArray(response.data.orders)) {
+        orders = response.data.orders
+      }
+      
+      console.log('Processed orders:', orders)
+      setOrderHistory(orders)
     } catch (error) {
       console.error('Error fetching order history:', error)
       setOrderError(error.message || 'Failed to load order history')
@@ -223,6 +238,7 @@ function App() {
               
               {!orderLoading && !orderError && orderHistory.length > 0 && (
                 <div className="space-y-4">
+                  {console.log('Rendering orders:', orderHistory)}
                   {orderHistory.map((order, index) => (
                     <div key={index} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
                       <div className="flex justify-between items-start mb-3">
