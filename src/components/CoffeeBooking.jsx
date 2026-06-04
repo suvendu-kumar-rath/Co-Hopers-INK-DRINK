@@ -281,33 +281,37 @@ function OrderModal({ item, gradient, onClose }) {
               </label>
             </div>
 
-            {/* UTR Number */}
-            <div>
-              <label className={labelCls}>UTR Number</label>
-              <input
-                type="text"
-                name="utrNumber"
-                value={order.utrNumber}
-                onChange={handleChange}
-                placeholder="Enter UTR / transaction ID"
-                className={inputCls}
-              />
-            </div>
+            {/* UTR Number - hidden when Monthly Payment is selected */}
+            {!order.isMonthlyPayment && (
+              <div>
+                <label className={labelCls}>UTR Number</label>
+                <input
+                  type="text"
+                  name="utrNumber"
+                  value={order.utrNumber}
+                  onChange={handleChange}
+                  placeholder="Enter UTR / transaction ID"
+                  className={inputCls}
+                />
+              </div>
+            )}
 
-            {/* Payment Screenshot */}
-            <div>
-              <label className={labelCls}>
-                Payment Screenshot{' '}
-                <span className="text-gray-400 normal-case font-normal">(optional)</span>
-              </label>
-              <input
-                type="file"
-                name="paymentScreenshot"
-                accept="image/*"
-                onChange={handleChange}
-                className={`${inputCls} file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-sm file:bg-pink-50 file:text-pink-600 hover:file:bg-pink-100 cursor-pointer`}
-              />
-            </div>
+            {/* Payment Screenshot - hidden when Monthly Payment is selected */}
+            {!order.isMonthlyPayment && (
+              <div>
+                <label className={labelCls}>
+                  Payment Screenshot{' '}
+                  <span className="text-gray-400 normal-case font-normal">(optional)</span>
+                </label>
+                <input
+                  type="file"
+                  name="paymentScreenshot"
+                  accept="image/*"
+                  onChange={handleChange}
+                  className={`${inputCls} file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-sm file:bg-pink-50 file:text-pink-600 hover:file:bg-pink-100 cursor-pointer`}
+                />
+              </div>
+            )}
 
             {/* Total */}
             {total !== null && (
@@ -316,6 +320,26 @@ function OrderModal({ item, gradient, onClose }) {
                 <div className="text-2xl font-bold text-pink-600">₹{total}</div>
               </div>
             )}
+
+            {/* QR Code - always shown */}
+            <div className="flex flex-col items-center gap-3 bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-100 rounded-2xl p-6">
+              <div className="text-center">
+                <p className="text-sm font-semibold text-gray-700 mb-3">Scan to Pay</p>
+                <img 
+                  src="/qr-code.jpeg" 
+                  alt="QR Code for payment" 
+                  className="w-48 h-48 object-contain rounded-lg"
+                  onLoad={() => console.log('QR Code loaded successfully')}
+                  onError={(e) => {
+                    console.error('QR Code failed to load:', e)
+                    e.target.style.display = 'none'
+                    if (e.target.parentElement) {
+                      e.target.parentElement.innerHTML = '<p class="text-gray-400 text-sm">QR Code not available</p>'
+                    }
+                  }}
+                />
+              </div>
+            </div>
 
             {/* Error */}
             {submitError && (
